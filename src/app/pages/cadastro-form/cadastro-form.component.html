@@ -1,0 +1,73 @@
+<div class="cadastro-form">
+  <div class="cadastro-form__container">
+    <div class="cadastro-form__card">
+      <h2 class="cadastro-form__title">Crie seu cadastro</h2>
+
+      <!-- Formulário reativo -->
+      <form [formGroup]="cadastroForm" (ngSubmit)="onProximo()">
+
+        <!-- 🔹 Área de Atuação -->
+        <div class="cadastro-form__radio-group">
+          <h3 class="cadastro-form__section-title">Qual a área de atuação?</h3>
+          <div>
+            <!-- Lista de opções de área -->
+            <app-radio-option
+              *ngFor="let area of areasAtuacao"
+              [id]="area.id"
+              [name]="'areaAtuacao'"
+              [value]="area.value"
+              [label]="area.label"
+              [checked]="cadastroForm.get('areaAtuacao')?.value === area.value"
+              (selectionChange)="onAreaChange($event)">
+            </app-radio-option>
+
+            <!-- Erro: área não selecionada -->
+            <div
+              *ngIf="cadastroForm.get('areaAtuacao')?.touched && cadastroForm.get('areaAtuacao')?.invalid"
+              class="cadastro-form__error">
+              Por favor, selecione uma área de atuação.
+            </div>
+          </div>
+
+          <!-- 🔹 Nível de Experiência -->
+          <div class="cadastro-form__section">
+            <h3 class="cadastro-form__section-title">Nível de experiência</h3>
+            
+            <app-experience-level
+              [levels]="niveisExperiencia"
+              [selectedLevel]="cadastroForm.get('niveisExperiencia')?.value"
+              (levelChange)="onNivelChange($event)">
+            </app-experience-level>
+
+            <!-- Erro: nível não selecionado -->
+            <div
+              *ngIf="cadastroForm.get('nivelExperiencia')?.touched && cadastroForm.get('nivelExperiencia')?.invalid"
+              class="cadastro-form__error">
+              Por favor, selecione um nível de experiência.
+            </div>
+          </div>
+
+          <!-- 🔹 Ações do formulário -->
+          <div class="cadastro-form__actions">
+            <app-button
+              text="Anterior"
+              type="outline"
+              icon="fas fa-arrow-left"
+              iconPosition="left"
+              (clicked)="onAnterior()">
+            </app-button>
+
+            <app-button
+              text="Próximo"
+              type="primary"
+              icon="fas fa-arrow-right"
+              iconPosition="right"
+              [disabled]="cadastroForm.invalid"
+              (clicked)="onProximo()">
+            </app-button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

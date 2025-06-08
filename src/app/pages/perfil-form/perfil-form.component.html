@@ -1,0 +1,266 @@
+<div class="cadastro-form">
+  <div class="cadastro-form__container">
+    <div class="cadastro-form__card">
+      <h2 class="cadastro-form__title">Crie seu cadastro</h2>
+      <p class="cadastro-form__subtitle">
+        Melhore sua descrição para atrair clientes!
+      </p>
+
+      <form [formGroup]="perfilForm" (ngSubmit)="onProximo()">
+        <!-- 📸 Upload de Foto -->
+        <div class="cadastro-form__field">
+          <label class="cadastro-form__label">Sua foto</label>
+
+          <div class="cadastro-form__upload-container">
+            <div
+              class="cadastro-form__upload-area"
+              [class.cadastro-form__upload-area--with-preview]="fotoPreview"
+              (click)="fileInput.click()"
+            >
+              <!-- 🔁 Sem imagem: instruções -->
+              <ng-container *ngIf="!fotoPreview">
+                <div>
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <p>
+                    Arraste arquivos para esta área ou clique para fazer o
+                    upload
+                  </p>
+                </div>
+              </ng-container>
+
+              <!-- ✅ Com imagem: preview -->
+              <ng-container *ngIf="fotoPreview">
+                <img
+                  [src]="fotoPreview"
+                  alt="Preview da foto"
+                  class="cadastro-form__foto-preview"
+                />
+              </ng-container>
+            </div>
+
+            <!-- Campo oculto para upload -->
+            <input
+              #fileInput
+              type="file"
+              accept="image/*"
+              style="display: none"
+              (change)="onFotoSelecionada($event)"
+            />
+          </div>
+        </div>
+
+        <!-- 📝Resumo -->
+        <div class="cadastro-form__field">
+          <label for="resumo" class="cadastro-form__label">Resumo</label>
+          <textarea
+            id="resumo"
+            class="cadastro-form__textarea"
+            formControlName="resumo"
+            rows="3"
+            maxlength="70"
+          >
+          </textarea>
+
+          <div class="cadastro-form__field-info">
+            <span>Faça um resumo em até 70 caracteres.</span>
+            <span>{{ caracteresRestantes }}</span>
+          </div>
+
+          <!-- ⚠️ Validação -->
+          <div class="cadastro-form__field-example">
+             Exemplo: Designer experiente em identidade visual
+           </div>
+           <div *ngIf="perfilForm.get('resumo')?.invalid 
+           && perfilForm.get('resumo')?.touched" class="cadastro-form__error">
+             <span *ngIf="perfilForm.get('resumo')
+             ?.errors?.['required']">Resumo é obrigatório</span>
+             <span *ngIf="perfilForm.get('resumo')
+             ?.errors?.['maxlength']">Resumo deve ter no máximo 70 caracteres</span>
+           </div>
+        </div>
+
+        <!-- 💼 Seleção de Habilidades -->
+        <div class="cadastro-form__field">
+          <label class="cadastro-form__label">
+            Cite até três habilidades que você considera principais
+          </label>
+
+          <div class="cadastro-form__chips">
+            <app-chip
+              *ngFor="let habilidade of habilidades"
+              [text]="habilidade.nome"
+              [selected]="habilidade.selecionada"
+              [disabled]="
+                !habilidade.selecionada &&
+                perfilForm.get('habilidadesSelecionadas')?.value.length >= 3
+              "
+              (clicked)="toggleHabilidade(habilidade)"
+            ></app-chip>
+          </div>
+        </div>
+
+        <!-- 🌐 Idiomas -->
+        <div class="cadastro-form__field">
+          <div class="cadastro-form__row cadastro-form__row--header">
+            <div class="cadastro-form__column">
+              <label class="cadastro-form__label">Idiomas</label>
+            </div>
+            <div class="cadastro-form__column">
+              <label class="cadastro-form__label">Nível</label>
+            </div>
+          </div>
+
+          <!-- 📄 FormArray de idiomas -->
+          <ng-container formArrayName="idiomas">
+            <div
+              class="cadastro-form__row"
+              *ngFor="let idiomaForm of idiomasArray.controls; let i = index"
+              [formGroupName]="i"
+            >
+              <!-- Idioma -->
+              <div class="cadastro-form__column">
+                <select
+                  aria-label="Idioma"
+                  class="cadastro-form__select"
+                  formControlName="nome"
+                >
+                  <option value="" disabled>Escolha o idioma</option>
+                  <option *ngFor="let idioma of idiomas" [value]="idioma">
+                    {{ idioma }}
+                  </option>
+                </select>
+
+                <!-- ⚠️ Validação -->
+                <div
+                  *ngIf="
+                    idiomaForm.get('nome')?.invalid &&
+                    idiomaForm.get('nome')?.touched
+                  "
+                  class="cadastro-form__error"
+                >
+                  Idioma é obrigatório!
+                </div>
+              </div>
+
+              <!-- Nível -->
+              <div class="cadastro-form__column cadastro-form__row">
+                <select
+                  class="cadastro-form__select"
+                  aria-label="Nível"
+                  formControlName="nivel"
+                >
+                  <option value="" disabled>Nível de conhecimento</option>
+                  <option *ngFor="let nivel of niveisIdioma" [value]="nivel">
+                    {{ nivel }}
+                  </option>
+                </select>
+
+                <!-- ⚠️ Validação -->
+                <div
+                  *ngIf="
+                    idiomaForm.get('nivel')?.invalid &&
+                    idiomaForm.get('nivel')?.touched
+                  "
+                  class="cadastro-form__error"
+                >
+                  Nível é obrigatório
+                </div>
+              </div>
+
+              <!-- ❌ Botão de remover idioma -->
+              <div class="cadastro-form__column cadastro-form__column--actions">
+                <button
+                  type="button"
+                  class="cadastro-form__icon-button"
+                  (click)="removerIdioma(i)"
+                  *ngIf="i > 0 || idiomaForm.get('nome')?.value !== 'Português'"
+                  aria-label="Remover idioma"
+                ></button>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ➕ Botão de adicionar idioma -->
+          <div class="cadastro-form__add-button">
+            <button
+              type="button"
+              class="cadastro-form__text-button"
+              (click)="adicionarIdioma()"
+              aria-label="Adicionar idioma"
+            >
+              <i class="fas fa-plus-circle"></i> Adicionar Idiomas
+            </button>
+          </div>
+        </div>
+
+        <!-- 🌐 Portifolio -->
+        <div class="cadastro-form__field">
+          <label for="portifolio" class="cadastro-form__label"
+            >Portifolio</label
+          >
+          <input
+            type="url"
+            id="portifolio"
+            class="cadastro-form__input"
+            formControlName="portifolio"
+            placeholder="Cole o link do seu portfólio"/>
+         
+          <!-- ⚠️ Validação -->
+          <div
+            *ngIf="
+              perfilForm.get('portifolio')?.invalid &&
+              perfilForm.get('portifolio')?.touched
+            "
+            class="cadastro-form__error"
+          >
+           URL inválida! Inclua http:// ou https://
+          </div>
+        </div>
+
+        <!-- 📝  LinkedIn -->
+        <div class="cadastro-form__field">
+          <label for="linkedin" class="cadastro-form__label"
+            >LinkedIn</label
+          >
+          <input
+            type="url"
+            id="linkedin"
+            class="cadastro-form__input"
+            formControlName="linkedin"
+             placeholder="Cole o link do seu perfil no LinkedIn"/>
+        
+          <!-- ⚠️ Validação -->
+          <div
+            *ngIf="
+              perfilForm.get('linkedin')?.invalid &&
+              perfilForm.get('linkedin')?.touched
+            "
+            class="cadastro-form__error"
+          >
+           URL do LinkedIn inválida! 
+          </div>
+        </div>
+
+        <!-- ⏮️⏭️ Ações do formulário -->
+        <div class="cadastro-form__actions">
+          <app-button
+            text="Anterior"
+            type="outline"
+            icon="fas fa-arrow-left"
+            iconPosition="left"
+            (clicked)="onAnterior()"
+          ></app-button>
+
+          <app-button
+            text="Próximo"
+            type="primary"
+            icon="fas fa-arrow-right"
+            iconPosition="right"
+            [disabled]="perfilForm.invalid"
+            (clicked)="onProximo()"
+          ></app-button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
