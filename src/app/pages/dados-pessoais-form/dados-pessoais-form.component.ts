@@ -65,9 +65,13 @@ export class DadosPessoaisFormComponent implements OnInit {
     private emailService: EmailValidatorService,
     private  dynamicFormService: DynamicFormService
   ) {
-    this.dynamicFormService.registrarFormConfig('dadosPessoaisForm', 
-      getDadosPessoaisConfig
-    );
+    this.dynamicFormService.registrarFormConfig(
+  'dadosPessoaisForm',
+  () => getDadosPessoaisConfig(this.emailService)
+);
+  //  this.dynamicFormService.registrarFormConfig('dadosPessoaisForm', 
+  //    getDadosPessoaisConfig
+  //  );
   }
   ngOnInit(): void {
 this.formConfig = this.dynamicFormService.getFormConfig('dadosPessoaisForm');

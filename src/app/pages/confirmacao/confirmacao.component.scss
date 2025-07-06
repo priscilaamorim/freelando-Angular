@@ -1,0 +1,55 @@
+.confirmacao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 5rem 5rem;
+  text-align: center;
+  background-color: $secondary-color;
+
+  h1 {
+    font-size: 2.5rem;
+    color: $primary-color;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-size: 1.2rem;
+    color: $gray-dark;
+    margin-bottom: 2rem;
+    max-width: 500px;
+  }
+
+  app-button {
+    width: 220px;
+  }
+
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+// Animação suave de entrada
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsividade
+@media (max-width: 600px) {
+  .confirmacao {
+    padding: 2rem 1rem;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+  }
+}
