@@ -11,9 +11,8 @@ export class DynamicFormService {
 
   constructor(private fb: FormBuilder) {}
 
-  // =========================
+ 
   // 🔸 Registro e leitura de configs
-  // =========================
 
   // Registra uma função que retorna a configuração do formulário
   registrarFormConfig(formName: string, config: Function): void {
@@ -29,9 +28,8 @@ export class DynamicFormService {
     return this.FormConfigs[formKey](...args); // Executa a função registrada
   }
 
-  // =========================
+
   // 🔸 Criação de FormGroup dinâmico
-  // =========================
 
   createFormGroup(config: FormConfig, formOptions?: AbstractControlOptions): FormGroup {
     const formControls: { [key: string]: any } = {};

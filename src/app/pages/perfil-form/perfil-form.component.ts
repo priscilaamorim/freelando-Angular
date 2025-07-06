@@ -26,9 +26,9 @@ import { Idioma } from '../../shared/models/idioma.interface';
   styleUrls: ['./perfil-form.component.scss'],
 })
 export class PerfilFormComponent implements OnInit {
-  // ========================
+ 
   // 🔸 Propriedades
-  // ========================
+ 
   perfilForm!: FormGroup;
   fotoPreview: string | ArrayBuffer | null = null;
   caracteresRestantes: number = 70;
@@ -50,18 +50,18 @@ export class PerfilFormComponent implements OnInit {
     'Nativo',
   ];
 
-  // ========================
+ 
   // 🔸 Construtor
-  // ========================
+ 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private cadastroService: CadastroService
   ) {}
 
-  // ========================
+ 
   // 🔸 Lifecycle
-  // ========================
+
   ngOnInit(): void {
     this.inicializarFormulario();
 
@@ -71,9 +71,9 @@ export class PerfilFormComponent implements OnInit {
   
     }
 
-  // ========================
+ 
   // 🔸 Métodos Públicos: Navegação
-  // ========================
+ 
   onAnterior(): void {
     this.salvarDadosAtuais();
     this.router.navigate(['/cadastro/dados-pessoais']);
@@ -86,9 +86,9 @@ export class PerfilFormComponent implements OnInit {
     }
   }
 
-  // ========================
+ 
   // 🔸 Métodos Públicos: Manipulação de Habilidades
-  // ========================
+  
   toggleHabilidade(habilidade: Habilidade): void {
     habilidade.selecionada = !habilidade.selecionada;
 
@@ -100,9 +100,9 @@ export class PerfilFormComponent implements OnInit {
     this.perfilForm.patchValue({ habilidadesSelecionadas });
   }
 
-  // ========================
+
   // 🔸 Métodos Públicos: Manipulação de Foto
-  // ========================
+
   onFotoSelecionada(event: any): void {
     const file = event.target.files[0]; // Primeiro arquivo selecionado
 
@@ -118,10 +118,9 @@ export class PerfilFormComponent implements OnInit {
     }
   }
 
-  // ========================
-  // 🔸 Métodos Públicos: Idiomas
-  // ========================
 
+  // 🔸 Métodos Públicos: Idiomas
+  
   get idiomasArray(): FormArray {
     return this.perfilForm.get('idiomas') as FormArray;
   }
@@ -148,9 +147,8 @@ export class PerfilFormComponent implements OnInit {
     this.idiomasArray.removeAt(index);
   }
 
-  // ========================
+  
   // 🔸 Métodos Privados
-  // ========================
 
   private inicializarFormulario(): void {
     this.perfilForm = this.fb.group({

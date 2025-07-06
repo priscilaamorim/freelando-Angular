@@ -18,8 +18,7 @@ export interface Cidade {
   providedIn: 'root',
 })
 export class IbgeService {
-  private readonly API_URL = 'http://servicodados.ibge.gov.br/api/v1/localidades';
-
+  private readonly API_URL = 'https://servicodados.ibge.gov.br/api/v1/localidades';
   constructor(private http: HttpClient) {}
 
   // 🔹 Retorna lista de estados ordenados por nome
