@@ -3,7 +3,7 @@ import { AbstractControlOptions, FormBuilder, FormGroup } from '@angular/forms';
 import { FormConfig } from '../models/form-config.interface';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DynamicFormService {
   // 🔹 Armazena funções de configuração de formulários registrados
@@ -11,7 +11,6 @@ export class DynamicFormService {
 
   constructor(private fb: FormBuilder) {}
 
- 
   // 🔸 Registro e leitura de configs
 
   // Registra uma função que retorna a configuração do formulário
@@ -28,17 +27,24 @@ export class DynamicFormService {
     return this.FormConfigs[formKey](...args); // Executa a função registrada
   }
 
-
   // 🔸 Criação de FormGroup dinâmico
 
-  createFormGroup(config: FormConfig, formOptions?: AbstractControlOptions): FormGroup {
+  createFormGroup(
+    config: FormConfig,
+    formOptions?: AbstractControlOptions
+  ): FormGroup {
     const formControls: { [key: string]: any } = {};
 
-    config.fields.forEach(field => {
+    config.fields.forEach((field) => {
+      console.log(
+        'asyncValidators for',
+        field.formControlName,
+        field.asyncValidators
+      );
       formControls[field.formControlName] = [
-        '',                         // Valor inicial
-        field.validators || [],     // Validadores síncronos
-        field.asyncValidators || [] // Validadores assíncronos
+        '', // Valor inicial
+        field.validators || [], // Validadores síncronos
+        field.asyncValidators || [], // Validadores assíncronos
       ];
     });
 

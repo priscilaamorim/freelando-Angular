@@ -45,7 +45,7 @@ export const senhasIguaisValidator: ValidatorFn = (
   selector: 'app-dados-pessoais-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, ButtonComponent],
-templateUrl: './dados-pessoais-form.component.html',
+  templateUrl: './dados-pessoais-form.component.html',
   styleUrls: ['./dados-pessoais-form.component.scss'],
 })
 export class DadosPessoaisFormComponent implements OnInit {
@@ -63,40 +63,39 @@ export class DadosPessoaisFormComponent implements OnInit {
     private cadastroService: CadastroService,
     private ibgeService: IbgeService,
     private emailService: EmailValidatorService,
-    private  dynamicFormService: DynamicFormService
+    private dynamicFormService: DynamicFormService
   ) {
-    this.dynamicFormService.registrarFormConfig(
-  'dadosPessoaisForm',
-  () => getDadosPessoaisConfig(this.emailService)
-);
-  //  this.dynamicFormService.registrarFormConfig('dadosPessoaisForm', 
-  //    getDadosPessoaisConfig
-  //  );
+    //  this.dynamicFormService.registrarFormConfig('dadosPessoaisForm',
+    //    getDadosPessoaisConfig
+    //  );
   }
   ngOnInit(): void {
-this.formConfig = this.dynamicFormService.getFormConfig('dadosPessoaisForm');
+    this.dynamicFormService.registrarFormConfig('dadosPessoaisForm', () =>
+      getDadosPessoaisConfig(this.emailService)
+    );
+    this.formConfig =
+      this.dynamicFormService.getFormConfig('dadosPessoaisForm');
 
-    const formOptions: AbstractControlOptions = {
-      validators: senhasIguaisValidator,
-    };
+   const formOptions: AbstractControlOptions = {
+    validators: senhasIguaisValidator,
+   };
 
     this.dadosPessoaisForm = this.dynamicFormService.createFormGroup(
-      this.formConfig, {validators: senhasIguaisValidator,
+      this.formConfig,
+      formOptions
+    );
 
-      }
-    )
-
-const savedData = this.cadastroService.getCadastroData();
-    if (savedData.nomeCompleto){
+    const savedData = this.cadastroService.getCadastroData();
+    if (savedData.nomeCompleto) {
       this.dadosPessoaisForm.patchValue({
         nomeCompleto: savedData.nomeCompleto,
         estado: savedData.estado,
         cidade: savedData.cidade,
         email: savedData.email,
-         senha: savedData.senha,
+        senha: savedData.senha,
         confirmaSenha: savedData.senha, // Preenche confirmaSenha com o mesmo valor de senha
       });
-    } 
+    }
 
     this.carregarEstados();
     this.configurarListernerEstado();
@@ -132,14 +131,19 @@ const savedData = this.cadastroService.getCadastroData();
     return field.type === type;
   }
 
-   hasField(name: string): boolean {  
-    return this.formConfig.fields.some(field => field.formControlName === name);  
-  }  
-  
-  getFieldByName(name: string): FormFieldBase {  
-    return this.formConfig.fields.find(field => field.formControlName === name) || {} as FormFieldBase;  
-  }  
-  
+  hasField(name: string): boolean {
+    return this.formConfig.fields.some(
+      (field) => field.formControlName === name
+    );
+  }
+
+  getFieldByName(name: string): FormFieldBase {
+    return (
+      this.formConfig.fields.find((field) => field.formControlName === name) ||
+      ({} as FormFieldBase)
+    );
+  }
+
   // CARREGAR ESTADOS
 
   private carregarEstados(): void {

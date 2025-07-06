@@ -176,7 +176,7 @@
               </div>
             </div>
 
-            <!-- Campo Senha -->
+            <!-- Campo confirma Senha -->
             <div class="cadastro-form__field cadastro-form__field--half">
               <label for="confirmaSenha" class="cadastro-form__label">{{
                 getFieldByName("confirmaSenha").label
@@ -216,7 +216,7 @@
         <!-- Mensagem de erro para senhas não coincidentes -->
 
         <div
-          *ngIf="dadosPessoaisForm.errors?.['senhasNaoIguais'] && dadosPessoaisForm.get('confirmaSenha')?.touched"
+          *ngIf="dadosPessoaisForm.errors?.['senhasDiferentes'] && dadosPessoaisForm.get('confirmaSenha')?.touched"
           class="cadastro-form__error"
         >
           As senhas não coincidem
